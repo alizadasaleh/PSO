@@ -88,10 +88,11 @@ class Particle:
         self.updateVelocity()
 
 def standart_deviation(*args):
-    sum = 0
+    z = rosenbrock(args)
+    std_deviation = 0
     for arg in args:
-        sum += (arg-mean())**2
-    answer = sqrt(sum/len(args))
+        std_deviation += (arg-z)**2
+    answer = sqrt(std_deviation/len(args)-1)
     return answer
 def show_points(particles):
     scat = []
