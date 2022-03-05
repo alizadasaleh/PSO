@@ -71,7 +71,7 @@ class Particle:
 def show_points(particles):
     scat = []
     for i in particles:
-        scat.append(ax.scatter(i.position[0], i.position[1], i.z_pos()))
+        scat.append(ax.scatter(i.position[0], i.position[1], i.z_pos(), s=30, c='black'))
     plt.pause(0.1)
 
 
@@ -96,5 +96,5 @@ if __name__ == "__main__":
     y_data = np.arange(-32,32,0.5)
     X, Y = np.meshgrid(x_data, y_data)
     Z = equation(X,Y)
-    ax.plot_surface(X, Y, Z)
+    ax.plot_surface(X, Y, Z, alpha=0.5)
     plt.show()
