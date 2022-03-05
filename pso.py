@@ -39,8 +39,7 @@ def rastrigin(*args):
     answer = 10*len(args)
     for arg in args:
         answer += arg**2 - 10* cos(2*pi*arg)
-    return answer 
-    #return (x-3.14)**2 + (y-2.72)**2 + np.sin(3*x+1.41) + np.sin(4*y-1.73)
+    return answer
 
 class Particle:
     def __init__(self, position):
@@ -88,6 +87,13 @@ class Particle:
             self.pbest_z = current_z
         self.updateVelocity()
 
+def standart_deviation(*args):
+    z = rosenbrock(args)
+    std_deviation = 0
+    for arg in args:
+        std_deviation += (arg-z)**2
+    answer = sqrt(std_deviation/len(args)-1)
+    return answer
 def show_points(particles):
     scat = []
     for i in particles:
@@ -136,15 +142,15 @@ def rosenbrock_run():
     n_particles = 30
     particles = []
     for i in range(n_particles):
-        particles.append(Particle( [random.uniform(-2.048,2.048),random.uniform(-2.048,2.048)] ))
+        particles.append(Particle( [random.uniform(-5,10),random.uniform(-5,10)] ))
 
     for x in range(30):
         for particle in particles:
             particle.move()
     show_points(particles)
 
-    x_data = np.arange(-2.048,2.048,0.1)
-    y_data = np.arange(-2.048,2.048,0.1)
+    x_data = np.arange(-5,10,0.2)
+    y_data = np.arange(-5,10,0.2)
     X, Y = np.meshgrid(x_data, y_data)
     Z = equation(X,Y)
     ax.plot_surface(X, Y, Z, alpha=0.5)
@@ -200,8 +206,8 @@ def rastrigin_run():
     print(mean(particles))
     show_points(particles)
 
-    x_data = np.arange(-5.12, 5.12,0.1)
-    y_data = np.arange(-5.12, 5.12,0.1)
+    x_data = np.arange(-5.12, 5.12,1)
+    y_data = np.arange(-5.12, 5.12,1)
     X, Y = np.meshgrid(x_data, y_data)
     Z = equation(X,Y)
     ax.plot_surface(X, Y, Z, alpha=0.5)

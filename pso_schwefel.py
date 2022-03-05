@@ -81,6 +81,6 @@ if __name__ == "__main__":
     x_data = np.arange(-500, 500, 0.5)
     y_data = np.arange(-500, 500, 0.5)
     X, Y = np.meshgrid(x_data, y_data)
-    Z = equation(X,Y)
+    Z = equation(X, Y)
     ax.plot_surface(X, Y, Z, alpha=0.5)
     plt.show()
