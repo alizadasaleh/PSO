@@ -1,7 +1,7 @@
 import numpy as np
 import matplotlib.pyplot as plt
-from mpl_toolkits import mplot3d
 import random
+from matplotlib.animation import FuncAnimation
 
 ax = plt.axes(projection='3d')
 
@@ -51,16 +51,23 @@ if __name__ == "__main__":
         particles.append(Particle( [random.randint(0,15),random.randint(0,15)] ))
 
     particles = np.array(particles)
+    scat = []
+
+    for i in particles:
+        scat.append(ax.scatter(i.position[0], i.position[1], i.z_pos(i.position)))
+    plt.pause(5)
+
     for particle in particles:
         particle.move()
 
     for i in particles:
         ax.scatter(i.position[0], i.position[1], i.z_pos(i.position))
-    x_data = np.arange(0,50,0.1)
-    y_data = np.arange(0,50,0.1)
+
+    x_data = np.arange(0,15,0.1)
+    y_data = np.arange(0,15,0.1)
     X, Y = np.meshgrid(x_data, y_data)
     Z = equation(X,Y)
-    ax.plot_surface(X, Y, Z)
+    # ax.plot_surface(X, Y, Z)
     plt.show()
 
 
