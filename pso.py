@@ -12,17 +12,35 @@ global W
 global equation
 ax = plt.axes(projection='3d')
 
-def schwefel(x,y):
-    return 418.9829*2 - x * sin( sqrt( abs( x )))-y*sin(sqrt(abs(y)))
+def schwefel(*args):
+    answer = 418.9829*len(args)
+    for arg in args:
 
-def ackley(x, y):
-    return -20.0 * exp(-0.2 * sqrt(0.5 * (x**2 + y**2)))-exp(0.5 * (cos(2 * pi * x)+cos(2 * pi * y))) + e + 20
+        answer += arg * sin(sqrt(abs(arg)))
+    return answer
+    # - x * sin( sqrt( abs( x )))-y*sin(sqrt(abs(y)))
 
-def rosenbrock(x, y):
-    return 100*(y-x**2)**2+(x-1)**2
+def ackley(*args):
+    first_part, second_part = 0, 0
+    for arg in args:
+        first_part += arg**2
+        second_part += cos(2*pi*arg)
+    answer = -20*exp(-0.2*sqrt(1/len(args)*first_part))-exp(1/len(args)*second_part)+20+exp(1)
+    return answer
 
-def rastrigin(x,y):
-    return (x-3.14)**2 + (y-2.72)**2 + np.sin(3*x+1.41) + np.sin(4*y-1.73)
+def rosenbrock(*args):
+    answer = 0
+    for i in range(len(args)-1):
+        answer += 100* (args[i+1]- args[i]**2 )**2 +(args[i]-1)**2
+    return answer
+
+
+def rastrigin(*args):
+    answer = 10*len(args)
+    for arg in args:
+        answer += arg**2 - 10* cos(2*pi*arg)
+    return answer 
+    #return (x-3.14)**2 + (y-2.72)**2 + np.sin(3*x+1.41) + np.sin(4*y-1.73)
 
 class Particle:
     def __init__(self, position):
@@ -118,15 +136,15 @@ def rosenbrock_run():
     n_particles = 30
     particles = []
     for i in range(n_particles):
-        particles.append(Particle( [random.uniform(-5,10),random.uniform(-5,10)] ))
+        particles.append(Particle( [random.uniform(-2.048,2.048),random.uniform(-2.048,2.048)] ))
 
     for x in range(30):
         for particle in particles:
             particle.move()
     show_points(particles)
 
-    x_data = np.arange(-5,10,0.2)
-    y_data = np.arange(-5,10,0.2)
+    x_data = np.arange(-2.048,2.048,0.1)
+    y_data = np.arange(-2.048,2.048,0.1)
     X, Y = np.meshgrid(x_data, y_data)
     Z = equation(X,Y)
     ax.plot_surface(X, Y, Z, alpha=0.5)
@@ -181,15 +199,15 @@ def rastrigin_run():
             particle.move()
     show_points(particles)
 
-    x_data = np.arange(-5.12, 5.12,1)
-    y_data = np.arange(-5.12, 5.12,1)
+    x_data = np.arange(-5.12, 5.12,0.1)
+    y_data = np.arange(-5.12, 5.12,0.1)
     X, Y = np.meshgrid(x_data, y_data)
     Z = equation(X,Y)
     ax.plot_surface(X, Y, Z, alpha=0.5)
     plt.show()
     
 if __name__ == "__main__": 
-
+    rosenbrock_run()
 
 
 
