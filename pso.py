@@ -197,6 +197,7 @@ def rastrigin_run():
     for x in range(30):
         for particle in particles:
             particle.move()
+    print(mean(particles))
     show_points(particles)
 
     x_data = np.arange(-5.12, 5.12,0.1)
@@ -205,9 +206,15 @@ def rastrigin_run():
     Z = equation(X,Y)
     ax.plot_surface(X, Y, Z, alpha=0.5)
     plt.show()
-    
+
+def mean(particles):
+    answer = np.zeros(len(particles[0].position))
+    for particle in particles:
+        answer = np.add(particle.position,answer)
+    return answer
+
 if __name__ == "__main__": 
-    rosenbrock_run()
+    rastrigin_run()
 
 
 
