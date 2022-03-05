@@ -1,22 +1,36 @@
 import numpy as np
 import matplotlib.pyplot as plt
 import random
-from numpy import exp,pi,sqrt,cos,e,pi,sin
+from matplotlib.animation import FuncAnimation
+from numpy import exp,pi,sqrt,cos,e,pi
+from numpy.ma import sin
 
 global global_best
 global global_best_z
-global c 
-global W 
+global c
+global W
 global equation
 ax = plt.axes(projection='3d')
 
-def schwefel(x,y):
-    return 418.9829*2 - x * sin( sqrt( abs( x )))-y*sin(sqrt(abs(y)))
+
+def schwefel(*args):
+    first_part, second_part = 0, 0
+    for arg in args:
+        first_part += arg**2
+        second_part += cos(2*pi*arg)
+    answer = -20*exp(-0.2*sqrt(1/len(args)*first_part))-exp(1/len(args)*second_part)+20+exp(1)
+    return answer
+
 
 def ackley(x, y):
     return -20.0 * exp(-0.2 * sqrt(0.5 * (x**2 + y**2)))-exp(0.5 * (cos(2 * pi * x)+cos(2 * pi * y))) + e + 20
-def rosenbrock(x, y):
-    return 100*(y-x**2)**2+(x-1)**2
+
+def rosenbrock(*args):
+    answer = 0
+    for i in range(len(args)-1):
+        answer += 100*(args[i+1]- args[i]**2)**2+(args[i]-1)**2
+    return answer
+
 
 class Particle:
     def __init__(self, position):
@@ -153,7 +167,7 @@ def schewefel_run():
     Z = equation(X,Y)
     ax.plot_surface(X, Y, Z, alpha=0.5)
     plt.show()
-    
-if __name__ == "__main__": 
+
+if __name__ == "__main__":
     rosenbrock_run()
 
