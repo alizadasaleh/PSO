@@ -3,6 +3,8 @@ import matplotlib.pyplot as plt
 import random
 from numpy import exp,pi,sqrt,cos,e,pi,sin
 
+from pso_rastrigin import rastrigin
+
 global global_best
 global global_best_z
 global c 
@@ -15,8 +17,12 @@ def schwefel(x,y):
 
 def ackley(x, y):
     return -20.0 * exp(-0.2 * sqrt(0.5 * (x**2 + y**2)))-exp(0.5 * (cos(2 * pi * x)+cos(2 * pi * y))) + e + 20
+
 def rosenbrock(x, y):
     return 100*(y-x**2)**2+(x-1)**2
+
+def rastrigin(x,y):
+    return (x-3.14)**2 + (y-2.72)**2 + np.sin(3*x+1.41) + np.sin(4*y-1.73)
 
 class Particle:
     def __init__(self, position):
@@ -79,7 +85,7 @@ def ackley_run():
     equation = ackley
     global_best = [0,0]
     global_best_z = 0
-    c = 0.1
+    c = 0.9
     W = 0.8
     n_particles = 30
     particles = []
@@ -135,25 +141,55 @@ def schewefel_run():
     c = 0.1
     W = 0.8
     equation = schwefel
-    global_best = [1,1]
+    global_best = [420.9687,420.9687]
     global_best_z = 0
     n_particles = 30
     particles = []
     for i in range(n_particles):
-        particles.append(Particle( [random.uniform(-32.768,32.768),random.uniform(-32.768,32.768)] ))
+        particles.append(Particle( [random.uniform(-500,500),random.uniform(-500,500)]))
 
     for x in range(30):
         for particle in particles:
             particle.move()
     show_points(particles)
 
-    x_data = np.arange(-5,10,0.2)
-    y_data = np.arange(-5,10,0.2)
+    x_data = np.arange(-500,500,20)
+    y_data = np.arange(-500,500,20)
+    X, Y = np.meshgrid(x_data, y_data)
+    Z = equation(X,Y)
+    ax.plot_surface(X, Y, Z, alpha=0.5)
+    plt.show()
+    
+def rastrigin_run():
+    global equation
+    global global_best
+    global global_best_z
+    global c
+    global W
+    c = 0.1
+    W = 0.8
+    equation = rastrigin
+    global_best = [0,0]
+    global_best_z = 0
+    n_particles = 30
+    particles = []
+    for i in range(n_particles):
+        particles.append(Particle( [random.uniform(-5.12, 5.12),random.uniform(-5.12, 5.12)]))
+
+    for x in range(30):
+        for particle in particles:
+            particle.move()
+    show_points(particles)
+
+    x_data = np.arange(-5.12, 5.12,1)
+    y_data = np.arange(-5.12, 5.12,1)
     X, Y = np.meshgrid(x_data, y_data)
     Z = equation(X,Y)
     ax.plot_surface(X, Y, Z, alpha=0.5)
     plt.show()
     
 if __name__ == "__main__": 
-    rosenbrock_run()
+
+
+
 
