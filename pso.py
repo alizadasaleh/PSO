@@ -5,7 +5,8 @@ def equation(x,y):
     return (x-3.14)**2 + (y-2.72)**2 + np.sin(3*x+1.41) + np.sin(4*y-1.73)
 
 global_best = None
-c = 2
+c = 0.5
+W = 0.5
 class Particle:
     def __init__(self,position):
         self.position = position
@@ -13,8 +14,11 @@ class Particle:
         self.pbest = position
     def setVelocity(self,vel):
         self.velocity = vel
-        
-
+#    def updateVelocity(self):
+#        self.velocity = W*self.velocity + c * random.random() * pb_pc_difference() + c * random.random() * gb_pc_difference()
+    
+    def move(self):
+        self.position = np.sum([self.position,self.velocity],axis=0)
 
     
 if __name__ == "__main__":
@@ -26,10 +30,5 @@ if __name__ == "__main__":
     particles = np.array(particles)
     for particle  in particles:
         print(particle.position)
-        particle.position = np.sum([particle.position,particle.velocity],axis=0)
+        particle.move()
         print(particle.position)
-
-
-    
-    
-#
