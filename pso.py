@@ -92,6 +92,7 @@ def standart_deviation(*args):
     for arg in args:
         sum += (arg-mean())**2
     answer = sqrt(sum/len(args))
+    return answer
 def show_points(particles):
     scat = []
     for i in particles:
