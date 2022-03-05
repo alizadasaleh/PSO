@@ -1,5 +1,3 @@
-from multiprocessing.spawn import prepare
-from turtle import update
 import numpy as np
 import matplotlib.pyplot as plt
 import random
@@ -24,7 +22,7 @@ def equation(x, y):
 class Particle:
     def __init__(self, position):
         self.position = position
-        self.velocity = [random.random() for i in range(len(position))]
+        self.velocity = [random.uniform(-1,1) for i in range(len(position))]
         global global_best_z
         global global_best
         x,y = position
@@ -49,7 +47,7 @@ class Particle:
         self.velocity = vel
     
     def updateVelocity(self):
-        self.velocity = W*self.velocity + c * random.random() * self.pb_pc_difference() + c * random.random() * self.gb_pc_difference()
+        self.velocity = W*self.velocity + c * random.uniform(-1,1) * self.pb_pc_difference() + c * random.uniform(-1,1) * self.gb_pc_difference()
     
     def move(self):
 
@@ -69,13 +67,13 @@ if __name__ == "__main__":
     n_particles = 5
     particles = []
     for i in range(n_particles):
-        particles.append(Particle( [random.randint(0,15),random.randint(0,15)] ))
+        particles.append(Particle( [random.uniform(-32.768,32.768),random.uniform(-32.768,32.768)] ))
 
     particles = np.array(particles)
     scat = []
-#    for i in particles:
-#        scat.append(ax.scatter(i.position[0], i.position[1], i.z_pos(i.position)))
-#    plt.pause(5)
+    for i in particles:
+        scat.append(ax.scatter(i.position[0], i.position[1], i.z_pos()))
+    plt.pause(0.5)
 
     for particle in particles:
         x,y = particle.pbest
@@ -85,15 +83,15 @@ if __name__ == "__main__":
         print(equation(x,y))
 
 
-    # for i in particles:
-    #     ax.scatter(i.position[0], i.position[1], i.z_pos(i.position))
+    for i in particles:
+        ax.scatter(i.position[0], i.position[1], i.z_pos())
 
-    # x_data = np.arange(0,15,0.1)
-    # y_data = np.arange(0,15,0.1)
-    # X, Y = np.meshgrid(x_data, y_data)
-    # Z = equation(X,Y)
-    # ax.plot_surface(X, Y, Z)
-    # plt.show()
+    x_data = np.arange(-32,32,0.5)
+    y_data = np.arange(-32,32,0.5)
+    X, Y = np.meshgrid(x_data, y_data)
+    Z = equation(X,Y)
+    ax.plot_surface(X, Y, Z)
+    plt.show()
 
 
 
