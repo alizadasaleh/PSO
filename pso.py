@@ -1,4 +1,3 @@
-
 import numpy as np
 import matplotlib.pyplot as plt
 from mpl_toolkits import mplot3d
@@ -50,12 +49,13 @@ if __name__ == "__main__":
     particles = []
     for i in range(n_particles):
         particles.append(Particle( [random.randint(0,15),random.randint(0,15)] ))
+
     particles = np.array(particles)
     for particle in particles:
-        particle.position = np.sum([particle.position,particle.velocity],axis=0)
+        particle.move()
+
     for i in particles:
         ax.scatter(i.position[0], i.position[1], i.z_pos(i.position))
-        print(i.position)
     x_data = np.arange(0,50,0.1)
     y_data = np.arange(0,50,0.1)
     X, Y = np.meshgrid(x_data, y_data)
@@ -63,12 +63,5 @@ if __name__ == "__main__":
     ax.plot_surface(X, Y, Z)
     plt.show()
 
-    
-    
-        particles.append(Particle([random.randint(0, 15), random.randint(0, 15)]))
-        print(particles[i].velocity)
-    particles = np.array(particles)
-    for particle in particles:
-        print(particle.position)
-        particle.move()
-        print(particle.position)
+
+
