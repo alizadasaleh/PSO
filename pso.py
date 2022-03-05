@@ -40,7 +40,6 @@ def rastrigin(*args):
     for arg in args:
         answer += arg**2 - 10* cos(2*pi*arg)
     return answer
-    #return (x-3.14)**2 + (y-2.72)**2 + np.sin(3*x+1.41) + np.sin(4*y-1.73)
 
 class Particle:
     def __init__(self, position):
@@ -88,6 +87,11 @@ class Particle:
             self.pbest_z = current_z
         self.updateVelocity()
 
+def standart_deviation(*args):
+    sum = 0
+    for arg in args:
+        sum += (arg-mean())**2
+    answer = sqrt(sum/len(args))
 def show_points(particles):
     scat = []
     for i in particles:
