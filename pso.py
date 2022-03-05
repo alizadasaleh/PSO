@@ -1,21 +1,26 @@
 import numpy as np
 import matplotlib.pyplot as plt
 import random
-from matplotlib.animation import FuncAnimation
-from numpy import exp,pi,sqrt,cos,e,pi
-from numpy.ma import sin
+from numpy import exp,pi,sqrt,cos,e,pi,sin
 
 from pso_rastrigin import rastrigin
 
 global global_best
 global global_best_z
-global c
-global W
+global c 
+global W 
 global equation
 ax = plt.axes(projection='3d')
 
-
 def schwefel(*args):
+    answer = 418.9829*len(args)
+    for arg in args:
+
+        answer += arg * sin(sqrt(abs(arg)))
+    return answer
+    # - x * sin( sqrt( abs( x )))-y*sin(sqrt(abs(y)))
+
+def ackley(*args):
     first_part, second_part = 0, 0
     for arg in args:
         first_part += arg**2
@@ -23,20 +28,19 @@ def schwefel(*args):
     answer = -20*exp(-0.2*sqrt(1/len(args)*first_part))-exp(1/len(args)*second_part)+20+exp(1)
     return answer
 
-
-def ackley(x, y):
-    return -20.0 * exp(-0.2 * sqrt(0.5 * (x**2 + y**2)))-exp(0.5 * (cos(2 * pi * x)+cos(2 * pi * y))) + e + 20
-
 def rosenbrock(*args):
     answer = 0
     for i in range(len(args)-1):
-        answer += 100*(args[i+1]- args[i]**2)**2+(args[i]-1)**2
+        answer += 100* (args[i+1]- args[i]**2 )**2 +(args[i]-1)**2
     return answer
 
 
-
-def rastrigin(x,y):
-    return (x-3.14)**2 + (y-2.72)**2 + np.sin(3*x+1.41) + np.sin(4*y-1.73)
+def rastrigin(*args):
+    answer = 10*len(args)
+    for arg in args:
+        answer += arg**2 - 10* cos(2*pi*arg)
+    return answer
+    #return (x-3.14)**2 + (y-2.72)**2 + np.sin(3*x+1.41) + np.sin(4*y-1.73)
 
 class Particle:
     def __init__(self, position):
@@ -201,8 +205,9 @@ def rastrigin_run():
     Z = equation(X,Y)
     ax.plot_surface(X, Y, Z, alpha=0.5)
     plt.show()
-
-if __name__ == "__main__":
+    
+if __name__ == "__main__": 
     rosenbrock_run()
+
 
 
