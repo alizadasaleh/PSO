@@ -1,18 +1,23 @@
 import numpy as np
 import matplotlib.pyplot as plt
 import random
-from matplotlib.animation import FuncAnimation
-from numpy import exp,pi,sqrt,cos,e,pi
+from numpy import exp,pi,sqrt,cos,e,pi,sin
 
-global_best = [0,0]
-global_best_z = 0
-c = 0.1
-W = 0.8
-
+global global_best
+global global_best_z
+global c 
+global W 
+global equation
 ax = plt.axes(projection='3d')
 
-def equation(x, y):
+def schwefel(x,y):
+    return 418.9829*2 - x * sin( sqrt( abs( x )))-y*sin(sqrt(abs(y)))
+
+def ackley(x, y):
     return -20.0 * exp(-0.2 * sqrt(0.5 * (x**2 + y**2)))-exp(0.5 * (cos(2 * pi * x)+cos(2 * pi * y))) + e + 20
+def rosenbrock(x, y):
+    return 100*(y-x**2)**2+(x-1)**2
+
 class Particle:
     def __init__(self, position):
         self.position = position
@@ -64,7 +69,18 @@ def show_points(particles):
     for i in particles:
         scat.append(ax.scatter(i.position[0], i.position[1], i.z_pos(), s=5, c='black'))
 
-if __name__ == "__main__": 
+
+def ackley_run():
+    global global_best
+    global global_best_z
+    global c
+    global W
+    global equation
+    equation = ackley
+    global_best = [0,0]
+    global_best_z = 0
+    c = 0.1
+    W = 0.8
     n_particles = 30
     particles = []
     for i in range(n_particles):
@@ -81,3 +97,63 @@ if __name__ == "__main__":
     Z = equation(X,Y)
     ax.plot_surface(X, Y, Z, alpha=0.5)
     plt.show()
+
+def rosenbrock_run():
+    global equation
+    global global_best
+    global global_best_z
+    global c
+    global W
+    c = 0.1
+    W = 0.8
+    equation = rosenbrock
+    global_best = [1,1]
+    global_best_z = 0
+    n_particles = 30
+    particles = []
+    for i in range(n_particles):
+        particles.append(Particle( [random.uniform(-5,10),random.uniform(-5,10)] ))
+
+    for x in range(30):
+        for particle in particles:
+            particle.move()
+    show_points(particles)
+
+    x_data = np.arange(-5,10,0.2)
+    y_data = np.arange(-5,10,0.2)
+    X, Y = np.meshgrid(x_data, y_data)
+    Z = equation(X,Y)
+    ax.plot_surface(X, Y, Z, alpha=0.5)
+    plt.show()
+
+def schewefel_run():
+    global equation
+    global global_best
+    global global_best_z
+    global c
+    global W
+    c = 0.1
+    W = 0.8
+    equation = schwefel
+    global_best = [1,1]
+    global_best_z = 0
+    n_particles = 30
+    particles = []
+    for i in range(n_particles):
+        particles.append(Particle( [random.uniform(-32.768,32.768),random.uniform(-32.768,32.768)] ))
+
+    for x in range(30):
+        for particle in particles:
+            particle.move()
+    show_points(particles)
+
+    x_data = np.arange(-5,10,0.2)
+    y_data = np.arange(-5,10,0.2)
+    X, Y = np.meshgrid(x_data, y_data)
+    Z = equation(X,Y)
+    ax.plot_surface(X, Y, Z, alpha=0.5)
+    plt.show()
+    
+if __name__ == "__main__": 
+    rosenbrock_run()
+
