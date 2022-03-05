@@ -3,11 +3,16 @@ import matplotlib.pyplot as plt
 import random
 from matplotlib.animation import FuncAnimation
 
+from numpy import exp
+from numpy import sqrt
+from numpy import cos
+from numpy import e
+from numpy import pi
 
 global_best = [0,0]
 global_best_z = 0
-c = 0.5
-W = 0.5
+c = 0.25
+W = 0.01
 
 
 
@@ -15,7 +20,8 @@ ax = plt.axes(projection='3d')
 
 
 def equation(x, y):
-    return (x-3.14)**2 + (y-2.72)**2 + np.sin(3*x+1.41) + np.sin(4*y-1.73)
+    return -20.0 * exp(-0.2 * sqrt(0.5 * (x**2 + y**2)))-exp(0.5 * (cos(2 *
+                                                                                pi * x)+cos(2 * pi * y))) + e + 20
 
 
 
@@ -66,7 +72,7 @@ def show_points(particles):
     scat = []
     for i in particles:
         scat.append(ax.scatter(i.position[0], i.position[1], i.z_pos()))
-    plt.pause(0.5)
+    plt.pause(0.1)
 
 
 if __name__ == "__main__":
@@ -75,15 +81,16 @@ if __name__ == "__main__":
     for i in range(n_particles):
         particles.append(Particle( [random.uniform(-32.768,32.768),random.uniform(-32.768,32.768)] ))
 
-    particles = np.array(particles)
-    scat = []
-
-    for particle in particles:
-        particle.move()
 
 
 
-    
+
+    for x in range(30):
+        show_points(particles)
+
+        for particle in particles:
+            particle.move()
+
 
     x_data = np.arange(-32,32,0.5)
     y_data = np.arange(-32,32,0.5)
