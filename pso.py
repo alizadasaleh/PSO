@@ -94,6 +94,7 @@ def standart_deviation(*args):
         std_deviation += (arg-z)**2
     answer = sqrt(std_deviation/len(args)-1)
     return answer
+
 def show_points(particles):
     scat = []
     for i in particles:
@@ -203,7 +204,6 @@ def rastrigin_run():
     for x in range(30):
         for particle in particles:
             particle.move()
-    print(mean(particles))
     show_points(particles)
 
     x_data = np.arange(-5.12, 5.12,1)
@@ -221,6 +221,7 @@ def mean(particles):
 
 if __name__ == "__main__": 
     rastrigin_run()
+
 
 
 
