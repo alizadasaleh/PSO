@@ -62,6 +62,12 @@ class Particle:
         if  equation(x,y) > self.z_pos():
             self.pbest = self.position
 
+def show_points(particles):
+    scat = []
+    for i in particles:
+        scat.append(ax.scatter(i.position[0], i.position[1], i.z_pos()))
+    plt.pause(0.5)
+
 
 if __name__ == "__main__":
     n_particles = 5
@@ -71,20 +77,13 @@ if __name__ == "__main__":
 
     particles = np.array(particles)
     scat = []
-    for i in particles:
-        scat.append(ax.scatter(i.position[0], i.position[1], i.z_pos()))
-    plt.pause(0.5)
 
     for particle in particles:
-        x,y = particle.pbest
-        print(equation(x,y))
         particle.move()
-        x,y = particle.pbest
-        print(equation(x,y))
 
 
-    for i in particles:
-        ax.scatter(i.position[0], i.position[1], i.z_pos())
+
+    
 
     x_data = np.arange(-32,32,0.5)
     y_data = np.arange(-32,32,0.5)
