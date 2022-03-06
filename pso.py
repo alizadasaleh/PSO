@@ -18,7 +18,6 @@ def schwefel(args):
 
         answer += arg * sin(sqrt(abs(arg)))
     return answer
-    # - x * sin( sqrt( abs( x )))-y*sin(sqrt(abs(y)))
 
 def ackley(args):
     first_part, second_part = 0, 0
@@ -91,13 +90,19 @@ def standart_deviation(*args):
     answer = sqrt(std_deviation/len(args)-1)
     return answer
 
+
 def show_points(particles):
     scat = []
-    for i in particles:
-        scat.append(ax.scatter(i.position[0], i.position[1], i.z_pos(), s=5, c='black'))
+    if len(particles[0].position) ==3:
+        for i in particles:
+            scat.append(ax.scatter(i.position[0], i.position[1], i.z_pos(), s=5, c='black'))
+    elif len(particles[0].position) == 2:
+        for i in particles:
+            scat.append(ax.scatter(i.position[0], i.position[1], 0, s=5, c='black'))
+    return scat
 
 
-def ackley_run(dimension):
+def ackley_run(dimension, sec):
     global global_best
     global global_best_z
     global c
@@ -115,21 +120,46 @@ def ackley_run(dimension):
     for i in range(n_particles):
         particles.append(Particle( d*[random.uniform(-32.768,32.768)] ))
 
-    for x in range(30):
-        for particle in particles:
-            particle.move()
-    show_points(particles)
+
     if d == 3:
         x_data = np.arange(-32,32,0.5)
         y_data = np.arange(-32,32,0.5)
         X, Y = np.meshgrid(x_data, y_data)
         Z = equation([X,Y])
         ax.plot_surface(X, Y, Z, alpha=0.5)
+        for x in range(30):
+            scat = show_points(particles)
+            plt.pause(sec)
+
+            if x != 29:
+                for i in scat:
+                    i.remove()
+                for particle in particles:
+                    particle.move()
         plt.show()
+    elif d == 2:
+        for x in range(30):
+            scat = show_points(particles)
+            plt.pause(sec)
+
+            if x != 29:
+                for i in scat:
+                    i.remove()
+                for particle in particles:
+                    particle.move()
+
+        x_data = np.arange(-32, 32, 0.5)
+        X = np.meshgrid(x_data)
+        Y = []
+        for x in X:
+            Y.append(equation([x]))
+        plt.plot(X[0], Y[0], 0)
+        plt.show()
+
     if d > 3:
         print([particle.current_z for particle in particles])
 
-def rosenbrock_run(dimension):
+def rosenbrock_run(dimension, sec):
     global equation
     global global_best
     global global_best_z
@@ -148,22 +178,31 @@ def rosenbrock_run(dimension):
     for i in range(n_particles):
         particles.append(Particle( d*[random.uniform(-5,10)] ))
 
-    for x in range(30):
-        for particle in particles:
-            particle.move()
+    # for x in range(30):
+    #     for particle in particles:
+    #         particle.move()
     if d == 3:
-        show_points(particles)
-
         x_data = np.arange(-5,10,0.2)
         y_data = np.arange(-5,10,0.2)
         X, Y = np.meshgrid(x_data, y_data)
         Z = equation([X,Y])
         ax.plot_surface(X, Y, Z, alpha=0.5)
+        for x in range(30):
+            scat = show_points(particles)
+
+            plt.pause(sec)
+
+            if x != 29:
+                for i in scat:
+                    i.remove()
+                for particle in particles:
+                    particle.move()
         plt.show()
     if d > 3:
         print([particle.position for particle in particles])
 
-def schewefel_run(dimension):
+
+def schewefel_run(dimension, sec):
     global equation
     global global_best
     global global_best_z
@@ -180,22 +219,50 @@ def schewefel_run(dimension):
     particles = []
     for i in range(n_particles):
         particles.append(Particle( d*[random.uniform(-500,500)]))
-
-    for x in range(30):
-        for particle in particles:
-            particle.move()
+    #
+    # for x in range(30):
+    #     for particle in particles:
+    #         particle.move()
     if d == 3:
-        show_points(particles)
+        # show_points(particles)
         x_data = np.arange(-500,500,20)
         y_data = np.arange(-500,500,20)
         X, Y = np.meshgrid(x_data, y_data)
         Z = equation([X,Y])
         ax.plot_surface(X, Y, Z, alpha=0.5)
+        for x in range(30):
+            scat = show_points(particles)
+            plt.pause(sec)
+
+            if x != 29:
+                for i in scat:
+                    i.remove()
+                for particle in particles:
+                    particle.move()
+        plt.show()
+    elif d == 2:
+        for x in range(30):
+            scat = show_points(particles)
+            plt.pause(sec)
+
+            if x != 29:
+                for i in scat:
+                    i.remove()
+                for particle in particles:
+                    particle.move()
+
+        x_data = np.arange(-500,500,20)
+        X = np.meshgrid(x_data)
+        Y = []
+        for x in X:
+            Y.append(equation([x]))
+        plt.plot(X[0], Y[0], 0)
+
         plt.show()
     if d > 3:
         print([particle.current_z for particle in particles])
     
-def rastrigin_run(dimension):
+def rastrigin_run(dimension, sec):
     global equation
     global global_best
     global global_best_z
@@ -213,16 +280,42 @@ def rastrigin_run(dimension):
     for i in range(n_particles):
         particles.append(Particle( d*[random.uniform(-5.12, 5.12)] ))
 
-    for x in range(30):
-        for particle in particles:
-            particle.move()
+    # for x in range(30):
+        # for particle in particles:
+            # particle.move()
     if d == 3:
-        show_points(particles)
-        x_data = np.arange(-5.12, 5.12,0.1)
-        y_data = np.arange(-5.12, 5.12,0.1)
+        # show_points(particles)
+        x_data = np.arange(-5.12, 5.12, 0.1)
+        y_data = np.arange(-5.12, 5.12, 0.1)
         X, Y = np.meshgrid(x_data, y_data)
         Z = equation([X,Y])
         ax.plot_surface(X, Y, Z, alpha=0.5)
+        for x in range(30):
+            scat = show_points(particles)
+            plt.pause(sec)
+            if x != 29:
+                for i in scat:
+                    i.remove()
+                for particle in particles:
+                    particle.move()
+
+        plt.show()
+    elif d == 2:
+        for x in range(30):
+            scat = show_points(particles)
+            plt.pause(sec)
+            if x != 29:
+                for i in scat:
+                    i.remove()
+                for particle in particles:
+                    particle.move()
+
+        x_data = np.arange(-5.12, 5.12, 0.1)
+        X = np.meshgrid(x_data)
+        Y = []
+        for x in X:
+            Y.append(equation([x]))
+        plt.plot(X[0], Y[0], 0)
         plt.show()
     if d == 5:
         print([particle.position for particle in particles])
@@ -234,5 +327,5 @@ def mean(particles):
     return answer
 
 if __name__ == "__main__": 
-    ackley_run(3)
+    schewefel_run(3, 0.1)
 
