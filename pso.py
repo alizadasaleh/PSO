@@ -105,8 +105,7 @@ def show_points(particles):
     scat = []
     for i in particles:
         scat.append(ax.scatter(i.position[0], i.position[1], i.z_pos(), s=5, c='black'))
-
-
+    
 def ackley_run(dimension):
     global global_best
     global global_best_z
@@ -138,13 +137,12 @@ def ackley_run(dimension):
         X, Y = np.meshgrid(x_data, y_data)
         Z = equation([X,Y])
         ax.plot_surface(X, Y, Z, alpha=0.5)
-        print([particle.position for particle in particles[:2]],standart_deviation(particles[:2]))
         ax.text2D(-0.30, 0.95, f"Mean: {mean(particles)}   Standart Deviation : {standart_deviation(particles)}", transform=ax.transAxes)
-
-        plt.show()
         plt.savefig(f"figures/ackley/fig{random.randint(0,1000)}.png")
 
-    if d > 3:
+        plt.show()
+
+    else:
         print([particle.position for particle in particles])
 
 def rosenbrock_run(dimension):
@@ -183,7 +181,7 @@ def rosenbrock_run(dimension):
         plt.savefig(f"figures/rosenbrock/fig{random.randint(0,1000)}.png")
 
         plt.show()
-    if d > 3:
+    else:
         print([particle.position for particle in particles])
 
 def schewefel_run(dimension):
@@ -220,7 +218,7 @@ def schewefel_run(dimension):
         plt.savefig(f"figures/schewefel/fig{random.randint(0,1000)}.png")
 
         plt.show()
-    if d > 3:
+    else :
         print([particle.current_z for particle in particles])
     
 def rastrigin_run(dimension):
@@ -255,16 +253,14 @@ def rastrigin_run(dimension):
         ax.plot_surface(X, Y, Z, alpha=0.5)
         ax.text2D(-0.30, 0.95, f"Mean: {mean(particles)}   Standart Deviation : {standart_deviation(particles)}", transform=ax.transAxes)
         plt.savefig(f"figures/rastrigin/fig{random.randint(0,1000)}.png")
-
         plt.show()
         
-    if d > 3:
+    else:
         print([particle.position for particle in particles])
 
-
-
 if __name__ == "__main__": 
-    schewefel_run(3)
+    #choose one of the function at each time
+    rastrigin_run(3)
 
 
 
