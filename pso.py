@@ -2,23 +2,23 @@ import numpy as np
 import matplotlib.pyplot as plt
 import random
 from numpy import exp,pi,sqrt,cos,e,pi,sin
+from matplotlib import pyplot as plt
 
-from pso_rastrigin import rastrigin
 
 global global_best
 global global_best_z
-global c 
+global c1 
+global c2
 global W 
 global equation
 ax = plt.axes(projection='3d')
 
 def schwefel(args):
-    answer = 418.9829*len(args)
+    answer = +418.9829*len(args)
     for arg in args:
 
-        answer += arg * sin(sqrt(abs(arg)))
+        answer -= arg * sin(sqrt(abs(arg)))
     return answer
-    # - x * sin( sqrt( abs( x )))-y*sin(sqrt(abs(y)))
 
 def ackley(args):
     first_part, second_part = 0, 0
@@ -68,7 +68,7 @@ class Particle:
         self.velocity = vel
     
     def updateVelocity(self):
-        self.velocity = W*self.velocity + c * random.uniform(0,0.5) * self.pb_pc_difference() + c * random.uniform(0,0.5) * self.gb_pc_difference()
+        self.velocity = W*self.velocity + c1 * random.uniform(0,0.5) * self.pb_pc_difference() + c2 * random.uniform(0,0.5) * self.gb_pc_difference()
     def move(self):
 
         self.position = np.sum([self.position,self.velocity],axis=0)
@@ -83,14 +83,24 @@ class Particle:
             self.pbest_z = current_z
         self.updateVelocity()
 
-def standart_deviation(*args):
-    z = rosenbrock(args)
-    std_deviation = 0
-    for arg in args:
-        std_deviation += (arg-z)**2
-    answer = sqrt(std_deviation/len(args)-1)
+def mean(particles):
+    answer = np.zeros(len(particles[0].position))
+    for particle in particles:
+        answer = np.add(particle.position,answer)
+
+    answer = np.multiply(answer,1/len(particles))
     return answer
 
+def standart_deviation(particles):
+    mean_var = mean(particles)
+    answer = 0
+    for particle in particles:
+        test =  np.add(-mean_var,particle.position)
+        answer += np.multiply(test,test)
+
+    answer = np.multiply(answer,len(particles)-1)
+    answer = np.array([sqrt(x) for x in  answer])
+    return answer
 def show_points(particles):
     scat = []
     for i in particles:
@@ -100,15 +110,18 @@ def show_points(particles):
 def ackley_run(dimension):
     global global_best
     global global_best_z
-    global c
+    global c1
+    global c2
     global W
     global equation
     global d
     equation = ackley
     global_best_z = 0
-    c = 0.9
+    c1 = 0.1
+    c2 = 0.1
+
     W = 0.8
-    d = dimension
+    d = dimension - 1
     global_best = d*[0]
     n_particles = 30
     particles = []
@@ -119,25 +132,32 @@ def ackley_run(dimension):
         for particle in particles:
             particle.move()
     show_points(particles)
-    if d == 3:
+    if dimension == 3:
         x_data = np.arange(-32,32,0.5)
         y_data = np.arange(-32,32,0.5)
         X, Y = np.meshgrid(x_data, y_data)
         Z = equation([X,Y])
         ax.plot_surface(X, Y, Z, alpha=0.5)
+        print([particle.position for particle in particles[:2]],standart_deviation(particles[:2]))
+        ax.text2D(-0.30, 0.95, f"Mean: {mean(particles)}   Standart Deviation : {standart_deviation(particles)}", transform=ax.transAxes)
+
         plt.show()
+        plt.savefig(f"figures/ackley/fig{random.randint(0,1000)}.png")
+
     if d > 3:
-        print([particle.current_z for particle in particles])
+        print([particle.position for particle in particles])
 
 def rosenbrock_run(dimension):
     global equation
     global global_best
     global global_best_z
-    global c
+    global c1
+    global c2
     global W
     global d
-    d = dimension
-    c = 0.1
+    d = dimension - 1
+    c1 = 0.1
+    c2 = 0.1
     W = 0.8
     
     equation = rosenbrock
@@ -151,7 +171,7 @@ def rosenbrock_run(dimension):
     for x in range(30):
         for particle in particles:
             particle.move()
-    if d == 3:
+    if dimension == 3:
         show_points(particles)
 
         x_data = np.arange(-5,10,0.2)
@@ -159,6 +179,9 @@ def rosenbrock_run(dimension):
         X, Y = np.meshgrid(x_data, y_data)
         Z = equation([X,Y])
         ax.plot_surface(X, Y, Z, alpha=0.5)
+        ax.text2D(-0.30, 0.95, f"Mean: {mean(particles)}   Standart Deviation : {standart_deviation(particles)}", transform=ax.transAxes)
+        plt.savefig(f"figures/rosenbrock/fig{random.randint(0,1000)}.png")
+
         plt.show()
     if d > 3:
         print([particle.position for particle in particles])
@@ -167,12 +190,14 @@ def schewefel_run(dimension):
     global equation
     global global_best
     global global_best_z
-    global c
+    global c1
+    global c2
     global W
     global d
-    c = 0.1
+    c1 = 0.1
+    c2 = 0.2
     W = 0.8
-    d = dimension
+    d = dimension - 1
     equation = schwefel
     global_best = d * [420.9687]
     global_best_z = 0
@@ -184,13 +209,16 @@ def schewefel_run(dimension):
     for x in range(30):
         for particle in particles:
             particle.move()
-    if d == 3:
+    if dimension == 3:
         show_points(particles)
         x_data = np.arange(-500,500,20)
         y_data = np.arange(-500,500,20)
         X, Y = np.meshgrid(x_data, y_data)
         Z = equation([X,Y])
         ax.plot_surface(X, Y, Z, alpha=0.5)
+        ax.text2D(-0.30, 0.95, f"Mean: {mean(particles)}   Standart Deviation : {standart_deviation(particles)}", transform=ax.transAxes)
+        plt.savefig(f"figures/schewefel/fig{random.randint(0,1000)}.png")
+
         plt.show()
     if d > 3:
         print([particle.current_z for particle in particles])
@@ -199,12 +227,14 @@ def rastrigin_run(dimension):
     global equation
     global global_best
     global global_best_z
-    global c
+    global c1
+    global c2
     global W
     global d
-    c = 0.1
+    c1 = 0.1
+    c2 = 0.2
     W = 0.8
-    d = dimension
+    d = dimension - 1
     equation = rastrigin
     global_best = d*[0]
     global_best_z = 0
@@ -216,23 +246,26 @@ def rastrigin_run(dimension):
     for x in range(30):
         for particle in particles:
             particle.move()
-    if d == 3:
+    if dimension == 3:
         show_points(particles)
         x_data = np.arange(-5.12, 5.12,0.1)
         y_data = np.arange(-5.12, 5.12,0.1)
         X, Y = np.meshgrid(x_data, y_data)
         Z = equation([X,Y])
         ax.plot_surface(X, Y, Z, alpha=0.5)
+        ax.text2D(-0.30, 0.95, f"Mean: {mean(particles)}   Standart Deviation : {standart_deviation(particles)}", transform=ax.transAxes)
+        plt.savefig(f"figures/rastrigin/fig{random.randint(0,1000)}.png")
+
         plt.show()
-    if d == 5:
+        
+    if d > 3:
         print([particle.position for particle in particles])
 
-def mean(particles):
-    answer = np.zeros(len(particles[0].position))
-    for particle in particles:
-        answer = np.add(particle.position,answer)
-    return answer
+
 
 if __name__ == "__main__": 
-    ackley_run(3)
+    schewefel_run(3)
+
+
+
 
