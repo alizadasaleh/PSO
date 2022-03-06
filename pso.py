@@ -98,7 +98,7 @@ def standart_deviation(particles):
         test =  np.add(-mean_var,particle.position)
         answer += np.multiply(test,test)
 
-    answer = np.multiply(answer,len(particles)-1)
+    answer = np.multiply(answer,1/(len(particles)-1))
     answer = np.array([sqrt(x) for x in  answer])
     return answer
 def show_points(particles):
